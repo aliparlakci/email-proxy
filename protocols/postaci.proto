@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "./main";
+
+service MailingServer {
+  rpc ForwardMail(ForwardMailRequest) returns (ForwardMailResponse);
+}
+
+message ForwardMailRequest {
+  uint64 mailId = 1;
+  string recipient = 2;
+}
+
+message ForwardMailResponse {
+  bool successful = 1;
+  string error = 2;
+}
