@@ -1,0 +1,10 @@
+version: '3.4'
+services:
+  postaci:
+    build: 
+      context: postaci
+    restart: always
+    env_file: ./postaci/.env
+    ports:
+      - "25:25"
+      - "5000:5000"

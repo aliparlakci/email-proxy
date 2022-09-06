@@ -14,10 +14,10 @@ type SMPTService struct {
 }
 
 type MailSender interface {
-	Send(ctx context.Context, senderAddr, recipientAddr string, mail []byte) error
+	Send(ctx context.Context, sender, recipientAddr string, mail []byte) error
 }
 
-func (s *SMPTService) Send(ctx context.Context, senderAddr, recipientAddr string, mail []byte) error {
+func (s *SMPTService) Send(ctx context.Context, sender, recipientAddr string, mail []byte) error {
 	addr := s.getAddr()
 
 	c, err := smtp.Dial(addr)
@@ -26,7 +26,7 @@ func (s *SMPTService) Send(ctx context.Context, senderAddr, recipientAddr string
 	}
 	defer c.Close()
 
-	err = c.Mail(senderAddr)
+	err = c.Mail(sender)
 	if err != nil {
 		return fmt.Errorf("something happened while issuing a MAIL command: %s", err)
 	}
