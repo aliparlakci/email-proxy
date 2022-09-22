@@ -8,3 +8,5 @@ services:
     ports:
       - "25:25"
       - "5000:5000"
+    volumes:
+      - "/root/Maildir/new:/root/Maildir/new"
