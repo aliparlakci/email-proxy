@@ -14,6 +14,5 @@ RUN go build -o server
 
 FROM alpine:latest
 EXPOSE 5000
-EXPOSE 25
 COPY --from=build /app/server .
 CMD [ "./server" ]
