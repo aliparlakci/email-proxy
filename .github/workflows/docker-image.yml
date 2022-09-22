@@ -1,0 +1,42 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Docker
+
+on:
+  push:
+    tags:
+      - v0.*
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GH_TOKEN }}
+          
+      - name: Set tag name
+        id: tag_name
+        run: |
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          echo ::set-output name=SOURCE_TAG::$VERSION
+          
+      - name: Build and publish postaci
+        run: |
+          cd ./postaci
+          docker build -t ghcr.io/aliparlakci/email-proxy/postaci:latest -t ghcr.io/aliparlakci/email-proxy/postaci:${{ steps.tag_name.outputs.SOURCE_TAG }} .
+          docker image push --all-tags ghcr.io/aliparlakci/email-proxy/postaci
