@@ -6,7 +6,6 @@ services:
     restart: always
     env_file: ./postaci/.env
     ports:
-      - "25:25"
       - "5000:5000"
     volumes:
-      - "/root/Maildir/new:/root/Maildir/new"
+      - "/root/Maildir/:/root/Maildir/"

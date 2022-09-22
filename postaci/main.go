@@ -138,8 +138,14 @@ func EmitNewEmailMessage(producer MessageProducer, mailId uint, receiver string)
 	return producer.Produce(context.Background(), "newemail", fmt.Sprintf("%v|%s", mailId, receiver))
 }
 
-func ListenIncomingEmails(emailpath string, cb func(string)) {
-	filepath.Walk(emailpath, func(path string, info os.FileInfo, err error) error {
+func ListenIncomingEmails(postfixPath string, cb func(string)) {
+	newEmailsPath := path.Join(postfixPath, "new")
+
+	filepath.Walk(newEmailsPath, func(path string, info os.FileInfo, err error) error {
+		if info == nil {
+			return nil
+		}
+
 		if info.IsDir() {
 			return err
 		}
@@ -157,7 +163,7 @@ func ListenIncomingEmails(emailpath string, cb func(string)) {
 	}
 	defer watcher.Close()
 
-	err = watcher.Add(emailpath)
+	err = watcher.Add(newEmailsPath)
 	if err != nil {
 		log.Fatal("Add failed:", err)
 	}

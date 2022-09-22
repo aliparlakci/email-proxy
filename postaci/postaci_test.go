@@ -55,7 +55,7 @@ func TestListenNewEmailFile(t *testing.T) {
 
 	done := make(chan bool)
 	timer := time.NewTimer(10 * time.Second)
-	go ListenIncomingEmails(fmt.Sprintf("%v/new/.", directory), func(filename string) {
+	go ListenIncomingEmails(fmt.Sprintf("%v/.", directory), func(filename string) {
 		OnNewEmail(fakeMessageProducer)(filename)
 		done <- true
 	})
